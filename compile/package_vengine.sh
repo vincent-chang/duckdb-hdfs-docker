@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "Build VEngine..."
 if [[ -z "$vengine_pkg_name" ]]; then
-    export vengine_pkg_name="vengine.CentOS7_$(arch).$(date +%Y%m%d).$(date +%H%M%S).tar.gz"
+    export vengine_pkg_name="vengine.${OS_TAG}_$(arch).$(date +%Y%m%d).$(date +%H%M%S).tgz"
 fi
 cd /opt/vengine-hadoopfs/duckdb
 make release GEN=ninja -j$(nproc)

@@ -1,23 +1,24 @@
 ARG OS_TAG
-FROM vengine-hadoopfs-build:${OS_TAG}
+FROM vengine-hadoopfs-build:${OS_TAG}-base
 LABEL maintainer="Vincent<vincent.zc.zhang@gmail.com>"
+ARG OS_TAG
 ARG TZ=Asia/Shanghai
 ARG CMAKE_VERSION=3.28.0-rc5
+ARG OPENSSL_VERSION=1.1.1w
 ARG PROTOBUF_VERSION=3.0.0-autogen-fix
 SHELL ["/bin/bash", "-c"]
-RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && \
-    echo "$TZ" > /etc/timezone && \
+RUN echo "export OS_TAG=$OS_TAG" >> /etc/bashrc && \
     source /etc/bashrc && \
     curl -fSL "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-$(arch).tar.gz" -o /tmp/cmake-${CMAKE_VERSION}-linux-$(arch).tar.gz && \
-    curl -fSL "https://www.openssl.org/source/openssl-1.1.1w.tar.gz" -o /tmp/openssl-1.1.1w.tar.gz && \
+    curl -fSL "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" -o /tmp/openssl-${OPENSSL_VERSION}.tar.gz && \
     curl -fSL "https://github.com/vincent-chang/protobuf/archive/refs/tags/v${PROTOBUF_VERSION}.tar.gz" -o /tmp/protobuf-${PROTOBUF_VERSION}.tar.gz && \
     tar -xzvf /tmp/cmake-${CMAKE_VERSION}-linux-$(arch).tar.gz -C /opt/ && \
     ln -s /opt/cmake-${CMAKE_VERSION}-linux-$(arch)/bin/* /usr/bin && \
-    tar -xzvf /tmp/openssl-1.1.1w.tar.gz -C /opt/ && \
-    rm -f /tmp/openssl-1.1.1w.tar.gz && \
-    chown -R root:root /opt/openssl-1.1.1w && \
-    cd /opt/openssl-1.1.1w && \
-    ./config --prefix=/usr && \
+    tar -xzvf /tmp/openssl-${OPENSSL_VERSION}.tar.gz -C /opt/ && \
+    rm -f /tmp/openssl-${OPENSSL_VERSION}.tar.gz && \
+    chown -R root:root /opt/openssl-${OPENSSL_VERSION} && \
+    cd /opt/openssl-${OPENSSL_VERSION} && \
+    ./config --prefix=/usr/local && \
     make -j$(nproc) && \
     make install && \
     tar -xzvf /tmp/protobuf-${PROTOBUF_VERSION}.tar.gz -C /opt/ && \
@@ -57,13 +58,16 @@ RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && \
     mkdir -p third_party/redis++ && \
     ln -s /usr/local/include/sw third_party/redis++/sw
 
+ADD entry_point.sh /root/
 ADD package.sh /opt/
 ADD package_vengine.sh /opt/
 ADD package_hadoopfs.sh /opt/
 
 RUN chmod +x /opt/package.sh && \
     chmod +x /opt/package_vengine.sh && \
-    chmod +x /opt/package_hadoopfs.sh
+    chmod +x /opt/package_hadoopfs.sh && \
+    chmod +x /root/entry_point.sh
 
 WORKDIR "/opt"
+ENTRYPOINT [ "/root/entry_point.sh" ]
 CMD ["/bin/bash"]

@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "Build Hadoop Extension..."
 if [[ -z "$hadoopfs_pkg_name" ]]; then
-    export hadoopfs_pkg_name="hadoopfs.extension.CentOS7_$(arch).$(date +%Y%m%d).$(date +%H%M%S).tar.gz"
+    export hadoopfs_pkg_name="hadoopfs.extension.${OS_TAG}_$(arch).$(date +%Y%m%d).$(date +%H%M%S).tgz"
 fi
 cd /opt/vengine-hadoopfs
 git pull
