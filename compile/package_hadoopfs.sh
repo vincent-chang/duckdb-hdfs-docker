@@ -3,10 +3,10 @@ echo "Build Hadoop Extension..."
 if [[ -z "$hadoopfs_pkg_name" ]]; then
     export hadoopfs_pkg_name="hadoopfs.extension.${OS_TAG}_$(arch).$(date +%Y%m%d).$(date +%H%M%S).tgz"
 fi
-cd /opt/vengine-hadoopfs
+cd /opt/duckdb-hadoopfs
 git pull
 make release GEN=ninja -j$(nproc)
-cd /opt/vengine-hadoopfs/build
+cd /opt/duckdb-hadoopfs/build
 mkdir hadoopfs
 cp release/duckdb ./hadoopfs/
 cp release/src/libduckdb.so ./hadoopfs/

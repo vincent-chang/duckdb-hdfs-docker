@@ -1,5 +1,5 @@
 ARG OS_TAG
-FROM vengine-hadoopfs-build:${OS_TAG}-base
+FROM duckdb-hadoopfs-build:${OS_TAG}-base
 LABEL maintainer="Vincent<vincent.zc.zhang@gmail.com>"
 ARG OS_TAG
 ARG TZ=Asia/Shanghai
@@ -51,8 +51,8 @@ RUN echo "export OS_TAG=$OS_TAG" >> /etc/bashrc && \
     make -j$(nproc) && \
     make install && \
     cd /opt && \
-    git clone --recurse-submodules -b vengine https://github.com/vincent-chang/duckdb-hdfs.git vengine-hadoopfs && \
-    cd /opt/vengine-hadoopfs && \
+    git clone --recurse-submodules https://github.com/vincent-chang/duckdb-hdfs.git duckdb-hadoopfs && \
+    cd /opt/duckdb-hadoopfs && \
     mkdir -p third_party/libhdfs3 && \
     ln -s /opt/libhdfs3/include/hdfs third_party/libhdfs3/hdfs && \
     mkdir -p third_party/redis++ && \
@@ -60,11 +60,11 @@ RUN echo "export OS_TAG=$OS_TAG" >> /etc/bashrc && \
 
 ADD entry_point.sh /root/
 ADD package.sh /opt/
-ADD package_vengine.sh /opt/
+ADD package_duckdb.sh /opt/
 ADD package_hadoopfs.sh /opt/
 
 RUN chmod +x /opt/package.sh && \
-    chmod +x /opt/package_vengine.sh && \
+    chmod +x /opt/package_duckdb.sh && \
     chmod +x /opt/package_hadoopfs.sh && \
     chmod +x /root/entry_point.sh
 

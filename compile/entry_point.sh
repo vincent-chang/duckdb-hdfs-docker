@@ -1,9 +1,9 @@
 #!/bin/bash
 source /etc/bashrc
-ls /opt/vengine.*.tgz > /dev/null 2>&1
-vengine=$?
-if [[ "$vengine" -ne 0 ]]; then
-    /opt/package_vengine.sh
+ls /opt/duckdb.*.tgz > /dev/null 2>&1
+duckdb=$?
+if [[ "$duckdb" -ne 0 ]]; then
+    /opt/package_duckdb.sh
 fi
 ls /opt/hadoopfs.*.tgz > /dev/null 2>&1
 hadoopfs=$?

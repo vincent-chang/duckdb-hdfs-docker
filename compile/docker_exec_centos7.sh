@@ -1,1 +1,1 @@
-docker exec -it vengine-hadoopfs-build-centos7-compile "/bin/bash"
+docker exec -it duckdb-hadoopfs-build-centos7-compile "/bin/bash"

@@ -1,1 +1,1 @@
-docker build --progress=plain . -t vengine-hadoopfs-build:centos7-base
+docker build --progress=plain . -t duckdb-hadoopfs-build:centos7-base
